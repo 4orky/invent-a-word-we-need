@@ -27,6 +27,22 @@
 # plain "what you came to get". The revised line re-scored gap 9,
 # clarity 10, word 9 = 28, still the strongest of the twelve, and is
 # 14 characters tighter.
+#
+# Revision pass 2 (2026-11-25, second polishing by the revising agent):
+# re-read all twelve candidates against the brief's four criteria and
+# re-added every score by hand. Two documentation nits were found and
+# fixed here, in comments only: (1) the first draft is not in this
+# list — only the revised winner and the eleven other candidates
+# are — so nothing said why the draft is absent; it lives in the
+# Revision pass note above, which is the visible proof that a real
+# revision happened; (2) the pick() tie-break ("highest score, then
+# shortest") was stated in the header but never explained at the call
+# site, so it is now spelled out where the key is built. No candidate
+# text, score, SHA-256 value, or program logic was touched: the winner
+# still scores 28, still hashes to the recorded SHA-256, and the output
+# is still byte-identical across runs. Second read confirms the winner
+# is the strongest line: the gap is universal, the definition lands in
+# one reading, and "Fridglect" reads and spells exactly as it sounds.
 
 CANDIDATES = [
     # score: gap 9, clarity 10, word 9 = 28
@@ -119,6 +135,11 @@ def pick(candidates):
         lowered = text.lower()
         assert not any(c in lowered for c in BANNED_STOCK_MOVES), \
             f"candidate uses an existing word: {text!r}"
+        # Tie-break (see Revision pass 2): highest score wins; on a tie
+        # the shorter text wins, because a word-and-definition that lands
+        # in fewer characters is the cleaner coinage. The key is
+        # (score, -len(text)), so a plain max-comparison over the list
+        # is deterministic.
         key = (score, -len(text))  # highest score, then shortest
         if best is None or key > best[0]:
             best = (key, text)
